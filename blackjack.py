@@ -72,6 +72,11 @@ def print_hand(hand):
         else:
             print(hand[x], end = " ")
 
+    print("- value:", end = " ")
+
+    v = get_value(hand)
+    print(v[0])
+
 def display_game():
     print("Dealer:")
     print_dealer_hand()
