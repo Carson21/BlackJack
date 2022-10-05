@@ -12,6 +12,7 @@ def init_deck():
 
 def deal_dealer():
     x = random.randint(0, len(deck) - 1)
+    print(x)
     d_hand.append(deck[x])
     deck.pop(x)
 
@@ -38,10 +39,31 @@ def get_value(hand):
         else: 
             v += 11
 
-    if ace > 0 and v <= 21:
+    if ace == 1:
         return (v, True)
     else:
         return (v, False)
+
+def print_player_hand():
+    for x in range(len(p_hand)):
+        if x != len(p_hand) - 1:
+            print(p_hand[x], end = ", ")
+        else:
+            print(p_hand[x], end = " ")
+    
+    
+    
+    print("- value:", end = " ")
+
+    v = get_value(p_hand)
+
+    if v[1] == True:
+        print(v[0], " / ", v[0] - 10)
+    else:
+        print(v[0])
+
+def print_dealer_hand():
+    print(d_hand[0])
 
 def print_hand(hand):
     for x in range(len(hand)):
@@ -49,23 +71,32 @@ def print_hand(hand):
             print(hand[x], end = ", ")
         else:
             print(hand[x], end = " ")
-    
-    
-    
-    print("- value:", end = " ")
-
-    v = get_value(hand)
-
-    if v[1] == True:
-        print(v[0], " / ", v[0] - 10)
-    else:
-        print(v[0])
 
 def display_game():
+    print("Dealer:")
+    print_dealer_hand()
+    print("\nPlayer:")
+    print_player_hand()
+
+def determine_outcome():
+    cls()
     print("Dealer:")
     print_hand(d_hand)
     print("\nPlayer:")
     print_hand(p_hand)
+    print("")
+
+    dv = get_value(d_hand)[0]
+    pv = get_value(p_hand)[0]
+
+    if dv > 21:
+        print("Dealer Busted!! You WIN!")
+    elif dv > pv:
+        print("Dealer has a higher value hand!! You LOST!")
+    elif dv < pv:
+        print("Dealer has a lower value hand!! You WON!")
+    else:
+        print("You had same value hand as the dealer!! You tied!")
 
 
 d_hand = []
@@ -92,7 +123,7 @@ def run_game():
         pv = get_value(p_hand)
         dv = get_value(d_hand)
 
-        if pv[0] > 21 or (pv[1] == False and pv[0] > 21):
+        if pv[0] > 21 or (not pv[1] and pv[0] > 21):
             print("You Busted!!")
             break
         elif pv[0] < 21:
@@ -100,7 +131,13 @@ def run_game():
                 d = input("\nWould you like to stand (s) or hit (h)?: ")
                 match d:
                     case "s":
-                        print("Need to check dealers Hand")
+                        while(True):
+                            dv = get_value(d_hand)[0]
+                            if dv <= 16:
+                                deal_dealer()
+                            else:
+                                determine_outcome()
+                                break
                         playing = False
                         break
                     case "h":
@@ -109,7 +146,7 @@ def run_game():
                     case _:
                         print("Error - Incorrect Input, Please try again.")
         else:
-            print("You got 21 but need to check dealer")
+            determine_outcome()
             break
 
 
