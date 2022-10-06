@@ -1,2 +1,1 @@
-# BlackJack
- BlackJack game implemented in python.
+ Blackjack game implemented in python.
